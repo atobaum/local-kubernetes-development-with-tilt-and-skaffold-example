@@ -1,0 +1,24 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: local-k-s-dev
+build:
+  local:
+    push: false
+  artifacts:
+    - image: myapp
+      context: .
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  kubeContext: k3d-local-dev
+  kubectl: {}
+manifests:
+  rawYaml:
+    - k8s/*
+portForward:
+  - resourceType: deployment
+    resourceName: myapp
+    namespace: default
+    port: 8080
+    localPort: 9000
